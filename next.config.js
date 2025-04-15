@@ -3,7 +3,10 @@ const nextConfig = {
   output: 'standalone',
   poweredByHeader: false,
   reactStrictMode: true,
-  swcMinify: true
+  swcMinify: true,
+  experimental: {
+    serverActions: true
+  }
 };
 
 module.exports = nextConfig; 
