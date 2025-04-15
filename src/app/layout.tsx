@@ -3,13 +3,13 @@ import { Inter, Roboto_Mono } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
-  variable: "--font-inter",
   subsets: ["latin"],
+  variable: "--font-inter",
 });
 
 const robotoMono = Roboto_Mono({
-  variable: "--font-roboto-mono",
   subsets: ["latin"],
+  variable: "--font-roboto-mono",
 });
 
 export const metadata: Metadata = {
@@ -23,11 +23,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${inter.variable} ${robotoMono.variable} antialiased`}
-      >
-        {children}
+    <html lang="en" className={`${inter.variable} ${robotoMono.variable}`}>
+      <body className="min-h-screen bg-white text-black antialiased">
+        <main className="flex min-h-screen flex-col">
+          {children}
+        </main>
       </body>
     </html>
   );
