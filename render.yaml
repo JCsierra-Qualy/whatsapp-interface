@@ -2,7 +2,6 @@ services:
   - type: web
     name: whatsapp-interface
     env: node
-    region: ohio
     plan: free
     buildCommand: npm ci && npm run build
     startCommand: npm start
@@ -13,8 +12,6 @@ services:
         sync: false
       - key: NODE_ENV
         value: production
-      - key: PORT
-        value: 10000
     autoDeploy: true
     healthCheckPath: /
     scaling:
