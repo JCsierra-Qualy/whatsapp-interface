@@ -1,62 +1,35 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Sidebar } from '@/components/sidebar'
 import { Chat } from '@/components/chat'
 import { Conversation } from '@/types'
-import { Moon, Sun } from 'lucide-react'
+import { MessageSquare } from 'lucide-react'
 
 export default function Home() {
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null)
-  const [isDarkMode, setIsDarkMode] = useState(false)
-
-  useEffect(() => {
-    // Check system preference on mount
-    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      setIsDarkMode(true)
-      document.documentElement.classList.add('dark')
-    }
-  }, [])
-
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode)
-    if (!isDarkMode) {
-      document.documentElement.classList.add('dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-    }
-  }
 
   return (
-    <div className="h-screen w-full overflow-hidden bg-white dark:bg-gray-900">
-      {/* Theme toggle button */}
-      <button
-        onClick={toggleDarkMode}
-        className="fixed top-4 right-4 z-50 p-2 rounded-full bg-white dark:bg-gray-800 shadow-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-        aria-label="Toggle dark mode"
-      >
-        {isDarkMode ? (
-          <Sun className="h-5 w-5 text-yellow-500" />
-        ) : (
-          <Moon className="h-5 w-5 text-gray-700" />
-        )}
-      </button>
-
-      {/* Main content */}
-      <div className="flex h-full">
-        <Sidebar
-          onSelectConversation={setSelectedConversation}
-          selectedConversationId={selectedConversation?.id}
-          isDarkMode={isDarkMode}
-        />
-        <div className="flex-1 h-full">
-          {selectedConversation ? (
-            <Chat conversation={selectedConversation} isDarkMode={isDarkMode} />
-          ) : (
-            <div className="h-full flex items-center justify-center text-gray-500 dark:text-gray-400">
-              <p className="text-lg">Selecciona una conversación para comenzar</p>
-            </div>
-          )}
+    <div className="h-screen w-full overflow-hidden bg-[#efeae2]">
+      <div className="max-w-[1800px] h-[100vh] mx-auto">
+        <div className="h-full flex shadow-2xl">
+          <Sidebar
+            onSelectConversation={setSelectedConversation}
+            selectedConversationId={selectedConversation?.id}
+          />
+          <div className="flex-1 h-full bg-white">
+            {selectedConversation ? (
+              <Chat conversation={selectedConversation} />
+            ) : (
+              <div className="h-full flex flex-col items-center justify-center bg-[#f0f2f5] text-gray-500">
+                <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
+                  <MessageSquare className="w-8 h-8" />
+                </div>
+                <p className="text-xl font-light">Selecciona una conversación para comenzar</p>
+                <p className="text-sm mt-2 text-gray-400">Tus mensajes se mostrarán aquí</p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

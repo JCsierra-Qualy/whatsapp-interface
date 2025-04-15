@@ -1,158 +1,63 @@
-import { useState, useEffect, useRef } from 'react'
-import { supabase } from '@/lib/supabase'
-import { Message, Conversation } from '@/types'
-import { formatMessageDate, cn } from '@/lib/utils'
+'use client'
 
-export function Chat({
-  conversation,
-  isDarkMode = false,
-}: {
+import { useEffect, useRef } from 'react'
+import { Conversation } from '@/types'
+import { formatDate } from '@/lib/utils'
+import { UserCircle } from 'lucide-react'
+
+interface ChatProps {
   conversation: Conversation
-  isDarkMode?: boolean
-}) {
-  const [messages, setMessages] = useState<Message[]>([])
-  const chatContainerRef = useRef<HTMLDivElement>(null)
+}
+
+export function Chat({ conversation }: ChatProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
-  const scrollToBottom = () => {
-    if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight
-    }
-  }
-
   useEffect(() => {
-    const fetchMessages = async () => {
-      const { data } = await supabase
-        .from('messages')
-        .select('*')
-        .eq('conversation_id', conversation.id)
-        .order('created_at', { ascending: true })
-      
-      if (data) {
-        setMessages(data)
-        setTimeout(scrollToBottom, 100)
-      }
-    }
-
-    fetchMessages()
-
-    const channel = supabase
-      .channel('messages')
-      .on('postgres_changes',
-        { 
-          event: 'INSERT', 
-          schema: 'public', 
-          table: 'messages',
-          filter: `conversation_id=eq.${conversation.id}`
-        },
-        (payload) => {
-          setMessages(prev => [...prev, payload.new as Message])
-          setTimeout(scrollToBottom, 100)
-        }
-      )
-      .subscribe()
-
-    return () => {
-      channel.unsubscribe()
-    }
-  }, [conversation.id])
-
-  const getMessageEmoji = (senderType: string) => {
-    switch (senderType.toLowerCase()) {
-      case 'user':
-        return '👤 '
-      case 'bot':
-        return '🤖 '
-      default:
-        return ''
-    }
-  }
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [conversation.messages])
 
   return (
-    <div className={cn(
-      "flex-1 flex flex-col h-screen",
-      isDarkMode ? "bg-gray-900" : "bg-[#f0f2f5]"
-    )}>
+    <div className="flex flex-col h-full">
       {/* Header */}
-      <div className={cn(
-        "px-4 py-3 shadow-sm flex items-center",
-        isDarkMode ? "bg-gray-800" : "bg-white"
-      )}>
-        <div className={cn(
-          "w-10 h-10 rounded-full flex items-center justify-center text-gray-600 mr-3",
-          isDarkMode ? "bg-gray-700" : "bg-gray-200"
-        )}>
-          {conversation.contact_name?.[0]?.toUpperCase() || '#'}
+      <div className="flex items-center px-4 py-3 bg-[#f0f2f5] border-b">
+        <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center mr-3">
+          <UserCircle className="w-6 h-6 text-gray-500" />
         </div>
-        <div>
-          <h2 className={cn(
-            "font-medium",
-            isDarkMode ? "text-white" : "text-gray-800"
-          )}>
-            {conversation.contact_name || conversation.phone_number}
-          </h2>
-          <p className={cn(
-            "text-sm",
-            isDarkMode ? "text-gray-400" : "text-gray-500"
-          )}>
-            {conversation.phone_number}
-          </p>
+        <div className="flex-1">
+          <h2 className="text-lg font-semibold text-gray-900">{conversation.name}</h2>
+          <p className="text-sm text-gray-500">En línea</p>
         </div>
       </div>
 
       {/* Messages */}
       <div 
-        ref={chatContainerRef}
-        className={cn(
-          "flex-1 overflow-y-auto p-4 space-y-2",
-          isDarkMode ? "bg-gray-900" : "bg-gray-100"
-        )}
-        style={{ 
-          backgroundImage: isDarkMode ? 'none' : 'url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAA0SURBVDhPYxgFo2AUjAIYYGRkZETmU8UQmGHUMgjdUJpYCDMQF6CKhbBwHAWjYBSMgpEKGBgAoKIJ5KEJp6IAAAAASUVORK5CYII=")',
+        className="flex-1 overflow-y-auto p-4 bg-[#efeae2]"
+        style={{
+          backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23e5e5e5' fill-opacity='0.4' fill-rule='evenodd'/%3E%3C/svg%3E\")",
           backgroundRepeat: 'repeat'
         }}
       >
-        {messages.map((message) => {
-          const isBot = message.sender_type.toLowerCase() === 'bot'
-          return (
+        {conversation.messages.map((message, index) => (
+          <div
+            key={index}
+            className={`flex ${
+              message.role === 'assistant' ? 'justify-start' : 'justify-end'
+            } mb-4`}
+          >
             <div
-              key={message.id}
-              className={cn(
-                "flex",
-                isBot ? "justify-end" : "justify-start"
-              )}
+              className={`max-w-[70%] rounded-lg p-3 shadow-sm ${
+                message.role === 'assistant'
+                  ? 'bg-white rounded-tl-none'
+                  : 'bg-[#dcf8c6] rounded-tr-none'
+              }`}
             >
-              <div className={cn(
-                "max-w-[75%] rounded-lg p-2 shadow-sm",
-                isBot 
-                  ? isDarkMode 
-                    ? "bg-green-700 text-white"
-                    : "bg-[#d9fdd3] text-gray-800"
-                  : isDarkMode
-                    ? "bg-gray-800 text-white"
-                    : "bg-white text-gray-800"
-              )}>
-                <p className="whitespace-pre-wrap">
-                  {getMessageEmoji(message.sender_type)}
-                  {message.message}
-                </p>
-                <div className={cn(
-                  "text-[11px] mt-1 flex items-center gap-1",
-                  isDarkMode 
-                    ? "text-gray-400"
-                    : "text-gray-500"
-                )}>
-                  {formatMessageDate(message.created_at)}
-                  {message.message_status && (
-                    <span className="text-xs">
-                      {message.message_status === 'sent' ? '✓' : ''}
-                    </span>
-                  )}
-                </div>
-              </div>
+              <p className="text-[15px] leading-tight text-gray-800">{message.content}</p>
+              <p className="text-[11px] mt-1 text-gray-500 text-right">
+                {formatDate(message.timestamp)}
+              </p>
             </div>
-          )
-        })}
+          </div>
+        ))}
         <div ref={messagesEndRef} />
       </div>
     </div>

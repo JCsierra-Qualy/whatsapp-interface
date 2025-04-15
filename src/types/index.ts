@@ -1,22 +1,14 @@
-export type Message = {
-  id: string;
-  phone_number: string;
-  sender_type: 'USER' | 'BOT' | 'AGENT';
-  message: string;
-  created_at: string;
-  conversation_id: string;
-  message_status?: string;
-  media_url?: string;
-  message_type?: string;
-  metadata?: Record<string, any>;
+export interface Message {
+  id: string
+  content: string
+  role: 'user' | 'assistant'
+  timestamp: string
 }
 
-export type Conversation = {
-  id: string;
-  phone_number: string;
-  last_message_at: string;
-  created_at: string;
-  contact_name?: string;
+export interface Conversation {
+  id: string
+  name: string
+  messages: Message[]
 }
 
 export type Database = {
