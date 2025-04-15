@@ -9,4 +9,14 @@ services:
         sync: false
       - key: NEXT_PUBLIC_SUPABASE_ANON_KEY
         sync: false
-    autoDeploy: true 
+      - key: NODE_ENV
+        value: production
+    autoDeploy: true
+    healthCheckPath: /
+    buildFilter:
+      paths:
+        - src/**/*.{js,jsx,ts,tsx}
+        - package.json
+        - next.config.js
+        - tsconfig.json
+        - public/**/* 
