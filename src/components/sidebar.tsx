@@ -3,6 +3,7 @@ import { Search, ChevronDown, Settings } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { Message, Conversation } from '@/types'
 import { formatMessageDate, cn } from '@/lib/utils'
+import { clsx } from 'clsx'
 
 export function Sidebar({
   onSelectConversation,
@@ -181,12 +182,13 @@ export function Sidebar({
                 </div>
                 {lastMessage && (
                   <div className="flex items-center">
-                    <p className={cn(
+                    <p className={clsx(
                       "text-sm truncate flex-1",
                       isDarkMode ? "text-gray-400" : "text-gray-500"
                     )}>
-                      {lastMessage.sender_type === 'bot' && '🤖 '}
-                      {lastMessage.sender_type === 'user' && '👤 '}
+                      {lastMessage.sender_type === 'BOT' && '🤖 '}
+                      {lastMessage.sender_type === 'USER' && '👤 '}
+                      {lastMessage.sender_type === 'AGENT' && '👨‍💼 '}
                       {lastMessage.message}
                     </p>
                   </div>
