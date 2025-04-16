@@ -4,6 +4,16 @@ module.exports = {
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/**/*.{js,ts,jsx,tsx}',
+  ],
+  safelist: [
+    'bg-white',
+    'text-gray-900',
+    'bg-whatsapp-chat-bg',
+    'bg-whatsapp-light-green',
+    'bg-whatsapp-header-green',
+    'bg-whatsapp-teal',
+    'bg-whatsapp-light-bg',
   ],
   darkMode: 'class',
   theme: {

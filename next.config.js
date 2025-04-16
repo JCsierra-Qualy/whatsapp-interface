@@ -6,6 +6,14 @@ const nextConfig = {
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
+  experimental: {
+    outputFileTracingRoot: undefined,
+  },
+  assetPrefix: process.env.NODE_ENV === 'production' ? undefined : undefined,
+  images: {
+    domains: ['localhost'],
+    unoptimized: true
+  },
   swcMinify: true,
   async headers() {
     return [

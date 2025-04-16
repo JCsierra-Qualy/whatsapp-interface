@@ -7,8 +7,8 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "start": "NODE_ENV=production next start -p ${PORT:-10000}",
+    "build": "next build && cp -r public .next/standalone/public && cp -r .next/static .next/standalone/.next/static",
+    "start": "node .next/standalone/server.js",
     "lint": "next lint"
   },
   "dependencies": {
@@ -26,6 +26,7 @@
     "@types/react": "^18.2.52",
     "@types/react-dom": "^18.2.18",
     "autoprefixer": "^10.4.17",
+    "cssnano": "^6.0.3",
     "eslint": "^8.56.0",
     "eslint-config-next": "14.0.4",
     "postcss": "^8.4.33",
