@@ -13,10 +13,13 @@ const nextConfig = {
   experimental: {
     outputFileTracingRoot: undefined,
   },
-  assetPrefix: process.env.NODE_ENV === 'production' ? undefined : undefined,
+  assetPrefix: process.env.NODE_ENV === 'production' ? '' : '',
   images: {
     domains: ['localhost'],
     unoptimized: true
+  },
+  env: {
+    PORT: process.env.PORT || '10000'
   },
   swcMinify: true,
   async headers() {
