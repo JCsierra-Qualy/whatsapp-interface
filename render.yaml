@@ -4,8 +4,8 @@ services:
     env: node
     region: oregon
     plan: free
-    buildCommand: npm install && npm run build
-    startCommand: npm start
+    buildCommand: npm install && npm run build && cp server.js .next/standalone/
+    startCommand: cd .next/standalone && npm start
     envVars:
       - key: NODE_ENV
         value: production
@@ -24,4 +24,5 @@ services:
         - tsconfig.json
         - public/**/*
         - postcss.config.mjs
-        - tailwind.config.js 
+        - tailwind.config.js
+        - server.js 

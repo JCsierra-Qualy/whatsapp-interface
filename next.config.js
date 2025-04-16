@@ -13,10 +13,11 @@ const nextConfig = {
   experimental: {
     outputFileTracingRoot: undefined,
   },
-  assetPrefix: process.env.NODE_ENV === 'production' ? '' : '',
+  assetPrefix: '',
   images: {
     domains: ['localhost'],
-    unoptimized: true
+    unoptimized: true,
+    path: '/_next/image'
   },
   env: {
     PORT: process.env.PORT || '10000'

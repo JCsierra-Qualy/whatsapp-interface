@@ -7,8 +7,8 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build && cp -r public .next/standalone/public && cp -r .next/static .next/standalone/.next/static",
-    "start": "cross-env PORT=${PORT:-10000} node .next/standalone/server.js",
+    "build": "next build && cp -r .next/static .next/standalone/.next/static && cp -r public .next/standalone/public && mkdir -p .next/standalone/.next/cache && cp -r .next/cache/images .next/standalone/.next/cache/images",
+    "start": "cross-env PORT=${PORT:-10000} node server.js",
     "lint": "next lint"
   },
   "dependencies": {
