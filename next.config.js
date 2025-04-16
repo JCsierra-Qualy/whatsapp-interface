@@ -3,6 +3,10 @@ const nextConfig = {
   output: 'standalone',
   poweredByHeader: false,
   reactStrictMode: true,
+  distDir: '.next',
+  generateBuildId: async () => {
+    return 'build'
+  },
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },

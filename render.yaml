@@ -2,24 +2,26 @@ services:
   - type: web
     name: whatsapp-interface
     env: node
+    region: oregon
+    plan: free
     buildCommand: npm install && npm run build
-    startCommand: node .next/standalone/server.js
+    startCommand: npm start
     envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
       - key: NEXT_PUBLIC_SUPABASE_URL
         sync: false
       - key: NEXT_PUBLIC_SUPABASE_ANON_KEY
         sync: false
-      - key: PORT
-        value: 10000
-    autoDeploy: true
     healthCheckPath: /
-    scaling:
-      minInstances: 1
-      maxInstances: 1
     buildFilter:
       paths:
         - src/**/*.{js,jsx,ts,tsx}
         - package.json
         - next.config.js
         - tsconfig.json
-        - public/**/* 
+        - public/**/*
+        - postcss.config.mjs
+        - tailwind.config.js 
